@@ -197,7 +197,28 @@ h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--fla
 #contacto{padding-bottom:80px}
 .cta{border-radius:8px;padding:clamp(40px,7vw,92px);background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
 .cta h2{max-width:18ch}
+.cta{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(30px,4.6vw,60px);align-items:end}
 .cta .lead{color:var(--muted-d)}
+.cta-copy{min-width:0}
+
+/* Retrato tipo página de prensa: blanco y negro con un duotono cálido.
+   Para dejarla en blanco y negro puro, borra la regla .shot::after. */
+.portrait{margin:0;min-width:0;max-width:340px;justify-self:end;width:100%}
+.portrait .shot{position:relative;display:block;isolation:isolate;overflow:hidden;border-radius:4px;background:#0C0A08}
+.portrait img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 32%;display:block;
+  filter:grayscale(1) contrast(1.06) brightness(.98)}
+.portrait .shot::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(200deg,var(--flame),#3B2117 72%);mix-blend-mode:color;opacity:.62}
+.portrait .shot::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.3;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.35'/%3E%3C/svg%3E")}
+.portrait figcaption{margin-top:14px;padding-top:12px;border-top:1px solid rgba(244,239,228,.22);
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-d);line-height:1.5}
+.portrait figcaption b{color:var(--paper);font-weight:700;letter-spacing:.06em;text-transform:none;font-size:14px}
+.portrait.pendiente .shot{aspect-ratio:4/5;display:grid;place-items:center;border:1px dashed rgba(244,239,228,.3)}
+.portrait.pendiente .shot::after,.portrait.pendiente .shot::before{display:none}
+.portrait.pendiente img{display:none}
+.portrait.pendiente .shot span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-d);text-align:center;padding:20px}
+@media (max-width:900px){.cta{grid-template-columns:1fr}.portrait{justify-self:start;max-width:340px}}
 .cta .hero-actions{margin-top:36px;position:relative;z-index:1}
 .cta .btn:not(.solid){background:transparent}
 .cta .btn{border-color:var(--paper);color:var(--paper)}
@@ -209,6 +230,7 @@ h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--fla
   background-size:100% 16px,100% 4px;background-position:0 0,0 6px;background-repeat:no-repeat}
 footer .brand{text-transform:none;letter-spacing:.01em;font-weight:600;color:var(--ink)}
 @media (max-width:760px){.cta{padding-bottom:92px}}
+@media (min-width:761px){.cta{padding-bottom:calc(clamp(40px,7vw,92px) + 26px)}}
 footer{padding:34px 5vw 54px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.14em;border-top:1px solid var(--line);margin:0 5vw}
 
 @media (prefers-reduced-motion:reduce){
@@ -406,14 +428,20 @@ footer{padding:34px 5vw 54px;display:flex;justify-content:space-between;flex-wra
   <!-- CONTACTO -->
   <section id="contacto">
     <div class="wrap cta">
-      <p class="kicker">07 · Contacto</p>
-      <h2>¿Tu próximo anuncio <em>lo hacemos juntos</em>?</h2>
-      <p class="lead">Cuéntame qué vendes y te respondo con una propuesta en menos de 24 horas.</p>
-      <div class="hero-actions">
-        <a class="btn solid js-whatsapp" id="waBtn" href="#">Escribir por WhatsApp</a>
-        <a class="btn" id="mailBtn" href="#">Enviar correo</a>
-        <a class="btn" id="liBtn" href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <div class="cta-copy">
+        <p class="kicker">07 · Contacto</p>
+        <h2>¿Tu próximo anuncio <em>lo hacemos juntos</em>?</h2>
+        <p class="lead">Cuéntame qué vendes y te respondo con una propuesta en menos de 24 horas.</p>
+        <div class="hero-actions">
+          <a class="btn solid js-whatsapp" id="waBtn" href="#">Escribir por WhatsApp</a>
+          <a class="btn" id="mailBtn" href="#">Enviar correo</a>
+          <a class="btn" id="liBtn" href="#" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
       </div>
+      <figure class="portrait">
+        <span class="shot"><img id="foto" src="img/beglisalejandra.jpg" alt="Retrato de beglisalejandra" width="900" height="1125" loading="lazy"></span>
+        <figcaption><b>beglisalejandra</b> · video para anuncios y Meta Ads</figcaption>
+      </figure>
     </div>
   </section>
 </main>
@@ -520,6 +548,16 @@ const CONFIG = {
   /* ---------- Contacto ---------- */
   const wa = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent("Hola, vi el portafolio de beglisalejandra y quiero información sobre los servicios.")}`;
   document.querySelectorAll(".js-whatsapp").forEach(a => { a.href = wa; a.target = "_blank"; a.rel = "noopener"; });
+  const foto = $("#foto");
+  const sinFoto = () => {
+    const fig = foto.closest(".portrait");
+    if(fig.classList.contains("pendiente")) return;
+    fig.classList.add("pendiente");
+    fig.querySelector(".shot").insertAdjacentHTML("beforeend", "<span>foto pendiente<br>img/beglisalejandra.jpg</span>");
+  };
+  foto.addEventListener("error", sinFoto);
+  if(foto.complete && !foto.naturalWidth) sinFoto();
+
   $("#mailBtn").href = "mailto:" + CONFIG.email;
   $("#liBtn").href = CONFIG.linkedin;
   $("#year").textContent = new Date().getFullYear();
@@ -537,9 +575,9 @@ const CONFIG = {
   const head = document.querySelector("header");
   const inkZones = [...document.querySelectorAll(".ink-zone")];
 
-  let scrollP = 0;
+  let scrollP = 0, scrollY0 = 0;
   function onScroll(){
-    const y = scrollY;
+    const y = scrollY0 = scrollY;
     scrollP = y / Math.max(1, document.body.scrollHeight - innerHeight);
 
     // La cabecera se invierte cuando pasa sobre un bloque oscuro
@@ -715,7 +753,7 @@ const CONFIG = {
     play.rotation.z = Math.sin(t * .5) * .05;
 
     // Al salir del hero queda como marca de agua, sin pelear con el texto
-    const vis = 1 - clamp((p - .015) / .055) * .92;
+    const vis = 1 - clamp((scrollY0 - innerHeight * .15) / (innerHeight * .85)) * .92;
     mats.forEach(mm => mm.opacity = mm.userData.base * vis);
     rec.material.opacity = vis * (.35 + Math.abs(Math.sin(t * 1.7)) * .65);
     bitMat.forEach((mm, i) => mm.opacity = (i ? .34 : .24) * (.35 + vis * .65));

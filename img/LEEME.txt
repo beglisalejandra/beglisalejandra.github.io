@@ -1,0 +1,13 @@
+Coloca aquí tu retrato con el nombre exacto:
+
+    beglisalejandra.jpg
+
+Recomendado: vertical 4:5 (por ejemplo 900 x 1125 px) o cuadrada; si es
+cuadrada se recorta a los lados y tu cara queda centrada. Menos de 400 KB.
+
+El blanco y negro con el tono cálido se aplica desde el CSS, así que sube
+la foto a color tal cual sale de la cámara. Si prefieres blanco y negro
+puro, borra la regla ".portrait .shot::after" en index.html.
+
+Mientras el archivo no exista, el sitio muestra un hueco marcado como
+"foto pendiente" en lugar de una imagen rota.
