@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>beglisalejandra · Meta Ads y video para anuncios</title>
 <meta name="description" content="Anuncios en video que venden y campañas de Meta Ads que los hacen rendir. UGC con IA, IA generativa, motion graphics y edición.">
+
+<!-- Vista previa al compartir el enlace (WhatsApp, Instagram, LinkedIn, Facebook).
+     OJO: estas dos direcciones tienen que ser absolutas y apuntar a donde publiques
+     el sitio. Si usas dominio propio, cambia beglisalejandra.github.io/Portafolio
+     por tu dominio en las tres etiquetas de abajo. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="beglisalejandra">
+<meta property="og:locale" content="es_ES">
+<meta property="og:url" content="https://beglisalejandra.github.io/Portafolio/">
+<meta property="og:title" content="beglisalejandra · Anuncios que venden">
+<meta property="og:description" content="Videos para anuncios y campañas de Meta Ads para marcas que quieren vender, no solo publicar.">
+<meta property="og:image" content="https://beglisalejandra.github.io/Portafolio/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="beglisalejandra · Anuncios que venden">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="beglisalejandra · Anuncios que venden">
+<meta name="twitter:description" content="Videos para anuncios y campañas de Meta Ads para marcas que quieren vender, no solo publicar.">
+<meta name="twitter:image" content="https://beglisalejandra.github.io/Portafolio/img/og.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23141210'/><path d='M40 30 L72 50 L40 70 Z' fill='%23E0401C'/><rect x='26' y='78' width='48' height='6' rx='3' fill='%23C8F24B'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -201,21 +220,20 @@ h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--fla
 .cta .lead{color:var(--muted-d)}
 .cta-copy{min-width:0}
 
-/* Retrato tipo página de prensa: blanco y negro con un duotono cálido.
-   Para dejarla en blanco y negro puro, borra la regla .shot::after. */
+/* Retrato tipo página de prensa: blanco y negro con grano de impresión.
+   Para teñirlo de cálido, añade a .shot un ::after con
+   background:var(--flame); mix-blend-mode:color; opacity:.5 */
 .portrait{margin:0;min-width:0;max-width:340px;justify-self:end;width:100%}
 .portrait .shot{position:relative;display:block;isolation:isolate;overflow:hidden;border-radius:4px;background:#0C0A08}
 .portrait img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 32%;display:block;
-  filter:grayscale(1) contrast(1.04) brightness(.95)}
-.portrait .shot::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(200deg,var(--flame),#3B2117 72%);mix-blend-mode:color;opacity:.5}
+  filter:grayscale(1) contrast(1.08) brightness(.96)}
 .portrait .shot::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.3;mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.35'/%3E%3C/svg%3E")}
 .portrait figcaption{margin-top:14px;padding-top:12px;border-top:1px solid rgba(244,239,228,.22);
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-d);line-height:1.5}
 .portrait figcaption b{color:var(--paper);font-weight:700;letter-spacing:.06em;text-transform:none;font-size:14px}
 .portrait.pendiente .shot{aspect-ratio:4/5;display:grid;place-items:center;border:1px dashed rgba(244,239,228,.3)}
-.portrait.pendiente .shot::after,.portrait.pendiente .shot::before{display:none}
+.portrait.pendiente .shot::before{display:none}
 .portrait.pendiente img{display:none}
 .portrait.pendiente .shot span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-d);text-align:center;padding:20px}
 @media (max-width:900px){.cta{grid-template-columns:1fr}.portrait{justify-self:start;max-width:340px}}

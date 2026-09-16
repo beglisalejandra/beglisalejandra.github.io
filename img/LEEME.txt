@@ -1,12 +1,16 @@
-beglisalejandra.jpg es el retrato que sale en el bloque de contacto.
+beglisalejandra.jpg  Retrato del bloque de contacto.
+og.jpg               Imagen que se ve al compartir el enlace (1200x630).
 
-Para cambiarlo, sube otra imagen con ese mismo nombre. Recomendado:
-vertical 4:5 (por ejemplo 900 x 1125 px) o cuadrada; si es cuadrada se
-recorta a los lados y la cara queda centrada. Menos de 400 KB.
+Para cambiar el retrato, sube otra imagen con el nombre
+beglisalejandra.jpg. Recomendado: vertical 4:5 (900 x 1125 px) o
+cuadrada; si es cuadrada se recorta a los lados y la cara queda
+centrada. Menos de 400 KB.
 
-Sube la foto a color, tal cual sale de la cámara: el blanco y negro con
-el tono cálido se aplica desde el CSS. Si la quieres en blanco y negro
-puro, borra la regla ".portrait .shot::after" en index.html.
+Súbela a color, tal cual sale de la cámara: el blanco y negro y el
+grano se aplican desde el CSS, así la original se conserva intacta.
 
-Si el archivo no existe, el sitio muestra un hueco marcado como "foto
-pendiente" en lugar de una imagen rota.
+Si cambias el retrato, og.jpg queda desactualizado, porque lleva la
+foto incrustada. Pídemelo y lo vuelvo a generar.
+
+Si el archivo beglisalejandra.jpg no existe, el sitio muestra un hueco
+marcado como "foto pendiente" en lugar de una imagen rota.
