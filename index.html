@@ -206,9 +206,9 @@ h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--fla
 .portrait{margin:0;min-width:0;max-width:340px;justify-self:end;width:100%}
 .portrait .shot{position:relative;display:block;isolation:isolate;overflow:hidden;border-radius:4px;background:#0C0A08}
 .portrait img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 32%;display:block;
-  filter:grayscale(1) contrast(1.06) brightness(.98)}
+  filter:grayscale(1) contrast(1.04) brightness(.95)}
 .portrait .shot::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(200deg,var(--flame),#3B2117 72%);mix-blend-mode:color;opacity:.62}
+  background:linear-gradient(200deg,var(--flame),#3B2117 72%);mix-blend-mode:color;opacity:.5}
 .portrait .shot::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.3;mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.35'/%3E%3C/svg%3E")}
 .portrait figcaption{margin-top:14px;padding-top:12px;border-top:1px solid rgba(244,239,228,.22);
