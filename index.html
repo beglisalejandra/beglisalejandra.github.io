@@ -73,6 +73,23 @@ nav a:hover{color:var(--ink);border-bottom-color:var(--flame)}
 .btn.solid{background:var(--ink);color:var(--paper)}
 .btn.solid:hover{background:var(--flame);border-color:var(--flame)}
 .btn:not(.solid):hover{background:var(--ink);color:var(--paper)}
+.head-right{display:flex;align-items:center;gap:18px}
+.lang{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600;letter-spacing:.1em}
+.lang::after{content:"";width:1px;height:15px;background:var(--line);margin-left:14px;order:9}
+.lang-btn{background:none;border:0;padding:3px 3px;font:inherit;letter-spacing:inherit;color:var(--muted);cursor:pointer;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s}
+.lang-btn:hover{color:var(--ink)}
+.lang-btn[aria-current="true"]{color:var(--ink);border-bottom-color:var(--flame)}
+header.dark .lang::after{background:var(--line-d)}
+header.dark .lang-btn{color:var(--muted-d)}
+header.dark .lang-btn:hover,header.dark .lang-btn[aria-current="true"]{color:var(--paper)}
+@media (max-width:560px){
+  header{padding:14px 5vw}
+  .logo{font-size:16px}
+  .head-right{gap:12px}
+  .lang{font-size:12px}
+  .lang::after{margin-left:10px}
+  header .btn.solid{padding:10px 14px;font-size:12px;letter-spacing:.02em}
+}
 header.dark{background:linear-gradient(var(--ink) 58%,transparent)}
 header.dark .logo{color:var(--paper)}
 header.dark .logo span{color:var(--flame)}
@@ -92,10 +109,13 @@ h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--fla
 
 /* Hero */
 #hero{min-height:100vh;display:grid;align-content:center;padding-top:140px;position:relative}
+/* Sin esto la portada se encoge al ancho de su texto y cambia de sitio
+   al cambiar de idioma; además así alinea con el resto de secciones. */
+#hero .wrap{width:100%}
 .hero-title{font-family:var(--display);font-weight:800;font-size:clamp(54px,12vw,178px);line-height:.85;letter-spacing:-.055em}
 .hero-title .row{display:block;white-space:nowrap}
 .hero-title .ser{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--flame);letter-spacing:-.02em;padding-left:9vw;font-size:1.07em}
-.hero-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:28px;margin-top:52px}
+.hero-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:28px;margin-top:52px;max-width:880px}
 .hero-foot p{max-width:42ch;color:var(--muted);font-size:18px}
 .hero-foot p strong{color:var(--ink);font-weight:700;font-family:var(--display);letter-spacing:-.02em}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
@@ -275,7 +295,13 @@ footer{padding:34px 5vw 54px;display:flex;justify-content:space-between;flex-wra
     <a href="#caso">Caso</a>
     <a href="#paquetes">Paquetes</a>
   </nav>
-  <a class="btn solid js-whatsapp" href="#contacto">Hablemos</a>
+  <div class="head-right">
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" class="lang-btn" data-idioma="es">ES</button>
+      <button type="button" class="lang-btn" data-idioma="en">EN</button>
+    </div>
+    <a class="btn solid js-whatsapp" href="#contacto">Hablemos</a>
+  </div>
 </header>
 
 <main>
@@ -466,7 +492,7 @@ footer{padding:34px 5vw 54px;display:flex;justify-content:space-between;flex-wra
 
 <footer>
   <span>© <span id="year"></span> <span class="brand">beglisalejandra</span></span>
-  <span>Meta Ads y video para anuncios</span>
+  <span class="tagline">Meta Ads y video para anuncios</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -519,6 +545,14 @@ const CONFIG = {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const $ = s => document.querySelector(s);
 
+  // Idioma: manda lo que el visitante haya elegido antes; si es su primera
+  // visita, se mira el idioma del navegador y si es inglés entra en inglés.
+  let listo = false;
+  let lang = localStorage.getItem("idioma");
+  if(lang !== "es" && lang !== "en"){
+    lang = (navigator.language || "es").toLowerCase().startsWith("en") ? "en" : "es";
+  }
+
   /* ---------- Videos ---------- */
   function videoBox(id, label){
     if(id){
@@ -564,14 +598,20 @@ const CONFIG = {
   io.observe($("#dash"));
 
   /* ---------- Contacto ---------- */
-  const wa = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent("Hola, vi el portafolio de beglisalejandra y quiero información sobre los servicios.")}`;
-  document.querySelectorAll(".js-whatsapp").forEach(a => { a.href = wa; a.target = "_blank"; a.rel = "noopener"; });
+  function ponerWhatsApp(){
+    const msg = lang === "en"
+      ? "Hi, I saw beglisalejandra's portfolio and I'd like information about your services."
+      : "Hola, vi el portafolio de beglisalejandra y quiero información sobre los servicios.";
+    const wa = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
+    document.querySelectorAll(".js-whatsapp").forEach(a => { a.href = wa; a.target = "_blank"; a.rel = "noopener"; });
+  }
   const foto = $("#foto");
   const sinFoto = () => {
     const fig = foto.closest(".portrait");
     if(fig.classList.contains("pendiente")) return;
     fig.classList.add("pendiente");
     fig.querySelector(".shot").insertAdjacentHTML("beforeend", "<span>foto pendiente<br>img/beglisalejandra.jpg</span>");
+    traducir(lang);
   };
   foto.addEventListener("error", sinFoto);
   if(foto.complete && !foto.naturalWidth) sinFoto();
@@ -579,6 +619,184 @@ const CONFIG = {
   $("#mailBtn").href = "mailto:" + CONFIG.email;
   $("#liBtn").href = CONFIG.linkedin;
   $("#year").textContent = new Date().getFullYear();
+
+  /* ---------- Español / Inglés ----------
+     La página está escrita en español. Aquí abajo, cada línea dice cómo se
+     traduce ese texto al inglés: a la izquierda el español tal cual aparece
+     en la página, a la derecha el inglés.
+     Si cambias un texto en español y no actualizas su línea aquí, ese texto
+     simplemente se queda en español; no se rompe nada.
+     Las etiquetas <b>, <em>, <small> y <strong> se pueden usar en el inglés. */
+  const EN = {
+    // Navegación y cabecera
+    "Caso": "Case",
+    "Paquetes": "Packages",
+    "Hablemos": "Let's talk",
+
+    // Portada
+    "Anuncios": "Ads",
+    "que venden.": "that sell.",
+    "beglisalejandra. Creo videos para anuncios y gestiono campañas de Meta Ads para marcas que quieren vender, no solo publicar.":
+      "<strong>beglisalejandra.</strong> I make video ads and run Meta Ads campaigns for brands that want to sell, not just post.",
+    "Ver mis videos": "See my videos",
+    "Ver Meta Ads": "See Meta Ads",
+    "UGC con IA": "<b>AI</b> UGC",
+    "Meta Ads · ROAS": "Meta Ads · <b>ROAS</b>",
+
+    // Servicios de video
+    "01 · Video": "01 · Video",
+    "Cuatro formas de detener el scroll.": "Four ways to <em>stop the scroll</em>.",
+    "Cada video está pensado para un objetivo: llamar la atención en los primeros 3 segundos y llevar a la acción.":
+      "Every video is built for one job: earn attention in the first 3 seconds and drive action.",
+    "video pendiente": "video coming soon",
+    "Presentadores y avatares IA que hablan como un cliente real.": "AI presenters and avatars that speak like a real customer.",
+    "IA generativa": "Generative AI",
+    "Escenas imposibles de grabar, creadas para tu producto.": "Scenes impossible to shoot, created for your product.",
+    "Material orgánico": "Organic footage",
+    "Tu material en bruto convertido en reels con ritmo.": "Your raw footage turned into reels with rhythm.",
+    "Texto, íconos y datos en movimiento para explicar rápido.": "Text, icons and data in motion to explain fast.",
+
+    // Reel
+    "Mira": "Watch",
+    "el reel": "the reel",
+    "Reel de muestra": "Sample reel",
+    "Lo mejor de mi trabajo en menos de un minuto": "My best work in under a minute",
+
+    // Galería
+    "02 · Portafolio": "02 · Portfolio",
+    "Trabajo reciente": "Recent work",
+    "UGC IA": "AI UGC",
+    "Orgánico": "Organic",
+    "Proyecto conceptual": "Concept project",
+
+    // Meta Ads
+    "Meta Ads con estrategia, no con suerte.": "Meta Ads by strategy, <em>not by luck</em>.",
+    "Estructuro la campaña, creo los anuncios y los optimizo con datos. Un solo equipo para el creativo y la pauta.":
+      "I structure the campaign, create the ads and optimize them with data. One team for the creative and the media buying.",
+    "Segmentación y embudo: público frío, tibio y remarketing.":
+      "<b>Targeting and funnel:</b> cold, warm and remarketing audiences.",
+    "Pruebas de creativos: varios ganchos por anuncio para encontrar el que vende.":
+      "<b>Creative testing:</b> several hooks per ad to find the one that sells.",
+    "Optimización semanal: presupuesto hacia lo que funciona.":
+      "<b>Weekly optimization:</b> budget moves to what works.",
+    "Informe claro: cuánto invertiste y cuánto te costó cada resultado.":
+      "<b>Clear reporting:</b> what you spent and what each result cost you.",
+
+    // Caso
+    "04 · Caso": "04 · Case",
+    "Caso Nova: suplementos en Venezuela.": "Nova case: supplements in Venezuela.",
+    "Campaña propia de prueba para una línea de suplementos. Creé los videos, estructuré la campaña y medí el costo por venta.":
+      "My own test campaign for a supplements line. I made the videos, structured the campaign and measured the cost per sale.",
+    "Administrador de anuncios · Resultados de la campaña": "Ads Manager · Campaign results",
+    "Inversión": "Spend",
+    "Alcance": "Reach",
+    "Conversaciones": "Conversations",
+    "Costo por resultado": "Cost per result",
+    "Campaña en curso. Los resultados se actualizan al cerrar la prueba.": "Campaign running. Results update when the test closes.",
+    "Datos reales del Administrador de anuncios.": "Real data from Ads Manager.",
+    "Objetivo": "Goal",
+    "Generar conversaciones de venta por WhatsApp con un presupuesto diario bajo.":
+      "Start sales conversations on WhatsApp with a low daily budget.",
+    "Estrategia": "Strategy",
+    "Un público amplio, cuatro estilos de video y dos ganchos por video para probar qué detiene el scroll.":
+      "One broad audience, four video styles and two hooks per video to test what stops the scroll.",
+    "Aprendizaje": "Takeaway",
+    "Aquí va lo que ajustaste y por qué. Este bloque es el que más convence a un cliente.":
+      "Here goes what you adjusted and why. This is the block that convinces a client the most.",
+
+    // Método
+    "05 · Proceso": "05 · Process",
+    "Cómo trabajamos juntos": "How we work together",
+    "Diagnóstico": "Audit",
+    "Reviso tu marca, tu competencia y tus anuncios actuales.": "I review your brand, your competitors and your current ads.",
+    "Creativos": "Creative",
+    "Guiones y videos con distintos ganchos para probar.": "Scripts and videos with different hooks to test.",
+    "Lanzamiento": "Launch",
+    "Campaña configurada, píxel y públicos listos.": "Campaign set up, pixel and audiences ready.",
+    "Optimización": "Optimization",
+    "Ajustes semanales e informe mensual de resultados.": "Weekly adjustments and a monthly results report.",
+
+    // Paquetes
+    "06 · Paquetes": "06 · Packages",
+    "Precios mensuales en dólares. El presupuesto de anuncios lo paga la marca directamente a Meta.":
+      "Monthly prices in US dollars. The ad budget is paid by the brand directly to Meta.",
+    "Para marcas que necesitan contenido que funcione.": "For brands that need content that works.",
+    "desde $350 / mes": "from $350 <small>/ mo</small>",
+    "8 reels editados con tu material": "8 reels edited from your footage",
+    "2 videos con IA o motion graphics": "2 videos with AI or motion graphics",
+    "Subtítulos, música y ganchos": "Subtitles, music and hooks",
+    "2 rondas de cambios por video": "2 rounds of changes per video",
+    "Quiero este": "I want this one",
+    "Anuncios completos": "Ads, end to end",
+    "Creativos y campaña en un solo lugar.": "Creative and campaign in one place.",
+    "desde $650 / mes": "from $650 <small>/ mo</small>",
+    "6 videos para anuncios (UGC IA o IA generativa)": "6 video ads (AI UGC or generative AI)",
+    "Variaciones de gancho para pruebas": "Hook variations for testing",
+    "Gestión de campañas en Meta Ads": "Meta Ads campaign management",
+    "Optimización semanal e informe mensual": "Weekly optimization and monthly report",
+    "Si ya tienes tus creativos.": "If you already have your creative.",
+    "desde $250 / mes": "from $250 <small>/ mo</small>",
+    "Estrategia y estructura de campaña": "Campaign strategy and structure",
+    "Configuración de píxel y públicos": "Pixel and audience setup",
+    "Optimización semanal": "Weekly optimization",
+    "Informe mensual de resultados": "Monthly results report",
+    "¿Necesitas un solo video? Reels desde $35, UGC con IA desde $90 y motion graphics desde $100.":
+      "Need just one video? Reels from $35, AI UGC from $90 and motion graphics from $100.",
+
+    // Contacto y pie
+    "07 · Contacto": "07 · Contact",
+    "¿Tu próximo anuncio lo hacemos juntos?": "Shall we make your next ad <em>together</em>?",
+    "Cuéntame qué vendes y te respondo con una propuesta en menos de 24 horas.":
+      "Tell me what you sell and I'll come back with a proposal in under 24 hours.",
+    "Escribir por WhatsApp": "Message on WhatsApp",
+    "Enviar correo": "Send an email",
+    "beglisalejandra · video para anuncios y Meta Ads": "<b>beglisalejandra</b> · video for ads and Meta Ads",
+    "Meta Ads y video para anuncios": "Meta Ads and video for ads",
+    "foto pendiente img/beglisalejandra.jpg": "photo coming soon<br>img/beglisalejandra.jpg"
+  };
+
+  const TITULO = {
+    es: "beglisalejandra · Meta Ads y video para anuncios",
+    en: "beglisalejandra · Meta Ads and video for ads"
+  };
+
+  // Qué elementos llevan texto traducible.
+  const TRADUCIBLES = [
+    "header nav a", ".btn", ".kicker", ".hero-title .row", ".hero-foot p", ".float-tag",
+    "h2", ".lead", ".svc h3", ".svc p", ".reel-words span", ".reel-cap",
+    ".gcard figcaption b", ".gcard figcaption span", ".ad-list li", ".dash-bar span",
+    ".kpi small", "#dashNote", ".story h3", ".story p", ".step h3", ".step p",
+    ".plan h3", ".plan .for", ".price", ".plan li", ".fine", ".portrait figcaption",
+    ".tagline", ".vbox .meta b", ".vbox .meta span", ".portrait.pendiente .shot span"
+  ].join(", ");
+
+  const plano = t => t.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+
+  function traducir(idioma){
+    lang = idioma === "en" ? "en" : "es";
+    document.documentElement.lang = lang;
+    document.title = TITULO[lang];
+
+    document.querySelectorAll(TRADUCIBLES).forEach(el => {
+      if(el.dataset.es === undefined) el.dataset.es = el.innerHTML;   // guarda el original
+      if(lang === "es"){ el.innerHTML = el.dataset.es; return; }
+      const en = EN[plano(el.dataset.es)];
+      if(en !== undefined) el.innerHTML = en;
+    });
+
+    document.querySelectorAll(".lang-btn").forEach(b => {
+      b.setAttribute("aria-current", String(b.dataset.idioma === lang));
+    });
+
+    ponerWhatsApp();
+    try{ localStorage.setItem("idioma", lang); }catch(e){}
+    if(listo) onScroll();   // los textos cambian de alto: recalcula el scroll
+  }
+
+  document.querySelectorAll(".lang-btn").forEach(b => {
+    b.addEventListener("click", () => { if(b.dataset.idioma !== lang) traducir(b.dataset.idioma); });
+  });
+  traducir(lang);
 
   /* ---------- Scroll ---------- */
   const clamp = (v,a=0,b=1) => Math.min(b, Math.max(a, v));
@@ -631,6 +849,7 @@ const CONFIG = {
   addEventListener("scroll", onScroll, {passive:true});
   addEventListener("resize", onScroll);
   onScroll();
+  listo = true;
 
   /* ---------- 3D: reproductor de video ----------
      Play + barra de reproducción que avanza con el scroll
